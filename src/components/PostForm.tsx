@@ -1,13 +1,14 @@
-import { useRouter } from "next/router";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { trpc } from "../utils/trpc";
 
-export default function PostForm() {
+export default function PostForm({ refetch }: { refetch: () => void }) {
+  const [btnDisable, setBtnDisable] = useState(false);
   const contentRef = useRef<HTMLTextAreaElement>(null);
-  const router = useRouter();
   const { mutate } = trpc.useMutation(["post.create"], {
     onSuccess() {
-      router.reload();
+      if (contentRef.current) contentRef.current.value = "";
+      refetch();
+      setBtnDisable(false);
     },
   });
   return (
@@ -15,6 +16,7 @@ export default function PostForm() {
       className="mx-auto flex w-2/3 max-w-md flex-col justify-center"
       onSubmit={e => {
         e.preventDefault();
+        setBtnDisable(true);
         if (!contentRef.current) return;
         mutate({
           content: contentRef.current.value,
@@ -22,7 +24,7 @@ export default function PostForm() {
       }}
     >
       <textarea
-        className="h-40 w-full resize-none overflow-auto rounded-t-lg p-2"
+        className="h-40 w-full resize-none overflow-auto rounded-t-lg p-2 focus:outline-none"
         placeholder="Post something..."
         ref={contentRef}
         required
@@ -30,7 +32,8 @@ export default function PostForm() {
       <input
         type="submit"
         value="Post"
-        className="cursor-pointer rounded-b-lg bg-blue-400 py-2"
+        className="cursor-pointer rounded-b-lg bg-blue-400 py-2 disabled:cursor-not-allowed disabled:bg-gray-500"
+        disabled={btnDisable}
       />
     </form>
   );
