@@ -9,9 +9,17 @@ export const postRouter = createRouter()
         orderBy: {
           createdAt: "desc",
         },
-        include: {
-          user: true,
-        },
+      });
+    },
+  })
+  .query("byId", {
+    input: z.object({
+      postId: z.number(),
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.post.findUnique({
+        where: { id: input.postId },
+        include: { user: true },
       });
     },
   })
