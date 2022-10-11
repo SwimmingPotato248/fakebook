@@ -23,7 +23,7 @@ export default function Comment({
       <div className="text-lg text-red-600">{comment.user.name}</div>
       <div>{comment.content}</div>
       <button
-        className="rounded bg-gray-600 p-1"
+        className="rounded bg-blue-600 p-1 text-xs"
         onClick={() => setReply(!reply)}
       >
         Reply

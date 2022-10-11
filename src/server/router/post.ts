@@ -17,6 +17,7 @@ export const postRouter = createRouter()
         skip: input.cursor ? 1 : 0,
         take: limit + 1,
         cursor: input.cursor ? { id: input.cursor } : undefined,
+        select: { id: true },
       });
       let nextCursor: typeof input.cursor | undefined = undefined;
       if (posts.length > limit) {
@@ -36,7 +37,7 @@ export const postRouter = createRouter()
     async resolve({ ctx, input }) {
       return await ctx.prisma.post.findUnique({
         where: { id: input.postId },
-        include: { user: true },
+        include: { user: true, likedBy: true },
       });
     },
   })
@@ -55,6 +56,26 @@ export const postRouter = createRouter()
         data: {
           content: input.content,
           userId: ctx.session?.user?.id,
+        },
+      });
+    },
+  })
+  .mutation("like", {
+    input: z.object({
+      postId: z.number(),
+      like: z.boolean(),
+    }),
+    async resolve({ ctx, input }) {
+      if (!ctx.session?.user)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+        });
+      await ctx.prisma.post.update({
+        where: { id: input.postId },
+        data: {
+          likedBy: input.like
+            ? { connect: { id: ctx.session?.user?.id } }
+            : { disconnect: { id: ctx.session.user.id } },
         },
       });
     },

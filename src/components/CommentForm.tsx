@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { trpc } from "../utils/trpc";
 
 export default function CommentForm({
@@ -10,13 +10,15 @@ export default function CommentForm({
   postId: number;
   commentId?: number;
   refetch: () => void;
-  close: () => void;
+  close?: () => void;
 }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const commentRef = useRef<HTMLTextAreaElement>(null);
   const { mutate } = trpc.useMutation(["comment.create"], {
     onSuccess() {
       if (commentRef.current) commentRef.current.value = "";
-      close();
+      if (close) close();
+      setIsSubmitting(false);
       refetch();
     },
   });
@@ -26,6 +28,7 @@ export default function CommentForm({
       onSubmit={e => {
         e.preventDefault();
         if (!commentRef.current || !commentRef.current.value) return;
+        setIsSubmitting(true);
         mutate({
           content: commentRef.current.value,
           postId,
@@ -41,7 +44,8 @@ export default function CommentForm({
       <input
         type="submit"
         value="Comment"
-        className="cursor-pointer rounded-b-lg bg-blue-400 py-1"
+        className="cursor-pointer rounded-b-lg bg-blue-400 py-1 disabled:cursor-not-allowed disabled:bg-gray-400"
+        disabled={isSubmitting}
       />
     </form>
   );

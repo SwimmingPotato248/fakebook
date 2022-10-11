@@ -1,3 +1,4 @@
+import { signIn } from "next-auth/react";
 import { useRef, useState } from "react";
 import { trpc } from "../utils/trpc";
 
@@ -9,6 +10,10 @@ export default function PostForm({ refetch }: { refetch: () => void }) {
       if (contentRef.current) contentRef.current.value = "";
       refetch();
       setBtnDisable(false);
+    },
+    onError(err) {
+      if (err.data?.code === "UNAUTHORIZED")
+        signIn("google", { callbackUrl: "/" });
     },
   });
   return (
