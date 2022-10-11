@@ -10,6 +10,9 @@ export const commentRouter = createRouter()
     async resolve({ ctx, input }) {
       return ctx.prisma.comment.findMany({
         where: { postId: input.postId },
+        include: {
+          user: true,
+        },
       });
     },
   })

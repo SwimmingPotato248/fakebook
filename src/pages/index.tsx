@@ -7,11 +7,17 @@ import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
   const {
-    data: posts,
+    data,
     isLoading,
     isError,
     refetch,
-  } = trpc.useQuery(["post.all"]);
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+  } = trpc.useInfiniteQuery(["post.all", { limit: 5 }], {
+    getNextPageParam: lastPage => lastPage.nextCursor,
+  });
+  console.log(data);
   return (
     <>
       <Head>
@@ -25,16 +31,25 @@ const Home: NextPage = () => {
           "Something went wrong!"
         ) : (
           <>
-            {posts?.map(post => {
-              return (
-                <>
-                  <PostCard key={post.id} postId={post.id} />
-                </>
-              );
-            })}
+            {data?.pages.map(group =>
+              group.posts.map(post => {
+                return (
+                  <>
+                    <PostCard key={post.id} postId={post.id} />
+                  </>
+                );
+              })
+            )}
           </>
         )}
       </div>
+      <button
+        onClick={() => fetchNextPage()}
+        className="mx-auto block rounded-lg bg-blue-600 px-4 disabled:cursor-not-allowed disabled:bg-gray-500"
+        disabled={!hasNextPage || isFetching}
+      >
+        {hasNextPage || isFetching ? "Read more..." : "No more posts"}
+      </button>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { Comment as CommentType } from "@prisma/client";
+import { Comment as CommentType, User } from "@prisma/client";
 import React, { useMemo, useState } from "react";
 import CommentCard from "./CommentCard";
 import CommentForm from "./CommentForm";
@@ -8,8 +8,8 @@ export default function Comment({
   comments,
   refetch,
 }: {
-  comment: CommentType;
-  comments: CommentType[];
+  comment: CommentType & { user: User };
+  comments: (CommentType & { user: User })[];
   refetch: () => void;
 }) {
   const childrenComments = useMemo(() => {
@@ -20,6 +20,7 @@ export default function Comment({
 
   return (
     <>
+      <div className="text-lg text-red-600">{comment.user.name}</div>
       <div>{comment.content}</div>
       <button
         className="rounded bg-gray-600 p-1"

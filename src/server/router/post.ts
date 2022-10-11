@@ -4,12 +4,29 @@ import { createRouter } from "./context";
 
 export const postRouter = createRouter()
   .query("all", {
-    async resolve({ ctx }) {
-      return await ctx.prisma.post.findMany({
+    input: z.object({
+      limit: z.number().int().min(1).max(10).nullish(),
+      cursor: z.number().nullish(),
+    }),
+    async resolve({ ctx, input }) {
+      const limit = input.limit ? input.limit : 5;
+      const posts = await ctx.prisma.post.findMany({
         orderBy: {
           createdAt: "desc",
         },
+        skip: input.cursor ? 1 : 0,
+        take: limit + 1,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
       });
+      let nextCursor: typeof input.cursor | undefined = undefined;
+      if (posts.length > limit) {
+        const nextPost = posts.pop();
+        nextCursor = nextPost?.id;
+      }
+      return {
+        posts,
+        nextCursor,
+      };
     },
   })
   .query("byId", {

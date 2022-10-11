@@ -1,4 +1,4 @@
-import { Comment as CommentType } from "@prisma/client";
+import { Comment as CommentType, User } from "@prisma/client";
 import Comment from "./Comment";
 
 export default function CommentCard({
@@ -6,12 +6,12 @@ export default function CommentCard({
   comments,
   refetch,
 }: {
-  comment: CommentType;
-  comments: CommentType[];
+  comment: CommentType & { user: User };
+  comments: (CommentType & { user: User })[];
   refetch: () => void;
 }) {
   return (
-    <div className="ml-2 border border-black">
+    <div className="ml-2 border border-black px-1">
       <Comment comment={comment} comments={comments} refetch={refetch} />
     </div>
   );
