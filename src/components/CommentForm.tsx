@@ -40,6 +40,7 @@ export default function CommentForm({
         className="resize-none rounded-t-lg px-1 focus:outline-none"
         ref={commentRef}
         placeholder="Comment something..."
+        required
       />
       <input
         type="submit"

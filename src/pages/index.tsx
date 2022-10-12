@@ -14,9 +14,7 @@ const Home: NextPage = () => {
     fetchNextPage,
     hasNextPage,
     isFetching,
-  } = trpc.useInfiniteQuery(["post.all", { limit: 5 }], {
-    getNextPageParam: lastPage => lastPage.nextCursor,
-  });
+  } = trpc.useInfiniteQuery(["post.all", { limit: 5 }]);
   console.log(data);
   return (
     <>

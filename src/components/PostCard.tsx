@@ -30,7 +30,7 @@ export default function PostCard({ postId }: { postId: number }) {
   if (isError || !post) return <div>Error...</div>;
   return (
     <div className="my-2 w-2/3 max-w-lg rounded-md bg-stone-300 p-2 ">
-      <h1 className="text-lg">{post.user.name}</h1>
+      <h1 className="text-xl">{post.user.name}</h1>
       <p className="text-xs">{post.createdAt.toLocaleString()}</p>
       <p className="my-2">{post.content}</p>
       <button
@@ -43,10 +43,9 @@ export default function PostCard({ postId }: { postId: number }) {
           <FontAwesomeIcon icon={faHeartSolid} color="red" />
         ) : (
           <FontAwesomeIcon icon={faHeart} />
-        )}{" "}
-        {liked ? "Unlike" : "Like"}
+        )}
       </button>{" "}
-      ({post.likedBy.length})
+      {post.likedBy.length}
       <CommentSection postId={post.id} />
     </div>
   );

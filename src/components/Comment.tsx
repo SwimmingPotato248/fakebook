@@ -15,10 +15,12 @@ export default function Comment({
   comment,
   comments,
   refetch,
+  collapsed,
 }: {
   comment: CommentType & { user: User; likedBy: User[] };
   comments: (CommentType & { user: User; likedBy: User[] })[];
   refetch: () => void;
+  collapsed: boolean;
 }) {
   const { mutate } = trpc.useMutation(["comment.like"], {
     onSuccess: () => {
@@ -36,6 +38,7 @@ export default function Comment({
   useEffect(() => {
     setLiked(comment.likedBy.findIndex(u => u.id === session?.user?.id) !== -1);
   }, [comment, session]);
+
   function handleLike() {
     mutate({ commentId: comment.id, like: !liked });
     setLiked(!liked);
@@ -44,41 +47,46 @@ export default function Comment({
   return (
     <>
       <div className="text-lg text-red-600">{comment.user.name}</div>
-      <div>{comment.content}</div>
-      <div className="flex gap-2">
-        <button
-          className="rounded p-1 text-xs"
-          onClick={() => setReply(!reply)}
-        >
-          <FontAwesomeIcon icon={faReply} />
-        </button>
-        <button onClick={handleLike}>
-          {liked ? (
-            <FontAwesomeIcon icon={faHeartSolid} color="red" />
-          ) : (
-            <FontAwesomeIcon icon={faHeart} />
-          )}
-        </button>
-      </div>
-      {reply && (
-        <CommentForm
-          postId={comment.postId}
-          commentId={comment.id}
-          refetch={refetch}
-          close={closeReply}
-        />
-      )}
-      {childrenComments.length !== 0 &&
-        childrenComments.map(c => {
-          return (
-            <CommentCard
-              key={c.id}
-              comment={c}
-              comments={comments}
+      {!collapsed && (
+        <>
+          <div>{comment.content}</div>
+          <div className="flex gap-2">
+            <button
+              className="rounded p-1 text-xs"
+              onClick={() => setReply(!reply)}
+            >
+              <FontAwesomeIcon icon={faReply} />
+            </button>
+            <button onClick={handleLike}>
+              {liked ? (
+                <FontAwesomeIcon icon={faHeartSolid} color="red" />
+              ) : (
+                <FontAwesomeIcon icon={faHeart} />
+              )}
+            </button>{" "}
+            {comment.likedBy.length}
+          </div>
+          {reply && (
+            <CommentForm
+              postId={comment.postId}
+              commentId={comment.id}
               refetch={refetch}
+              close={closeReply}
             />
-          );
-        })}
+          )}
+          {childrenComments.length !== 0 &&
+            childrenComments.map(c => {
+              return (
+                <CommentCard
+                  key={c.id}
+                  comment={c}
+                  comments={comments}
+                  refetch={refetch}
+                />
+              );
+            })}
+        </>
+      )}
     </>
   );
 }
