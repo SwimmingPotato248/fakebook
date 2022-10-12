@@ -12,6 +12,7 @@ export const commentRouter = createRouter()
         where: { postId: input.postId },
         include: {
           user: true,
+          likedBy: true,
         },
       });
     },
@@ -40,6 +41,28 @@ export const commentRouter = createRouter()
           post: {
             connect: { id: input.postId },
           },
+        },
+      });
+    },
+  })
+  .mutation("like", {
+    input: z.object({
+      commentId: z.number(),
+      like: z.boolean(),
+    }),
+    async resolve({ input, ctx }) {
+      if (!ctx.session?.user)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+        });
+      await ctx.prisma.comment.update({
+        where: {
+          id: input.commentId,
+        },
+        data: {
+          likedBy: input.like
+            ? { connect: { id: ctx.session?.user.id } }
+            : { disconnect: { id: ctx.session.user.id } },
         },
       });
     },

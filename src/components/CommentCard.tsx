@@ -6,8 +6,8 @@ export default function CommentCard({
   comments,
   refetch,
 }: {
-  comment: CommentType & { user: User };
-  comments: (CommentType & { user: User })[];
+  comment: CommentType & { user: User; likedBy: User[] };
+  comments: (CommentType & { user: User; likedBy: User[] })[];
   refetch: () => void;
 }) {
   return (

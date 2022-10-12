@@ -45,7 +45,8 @@ export default function PostCard({ postId }: { postId: number }) {
           <FontAwesomeIcon icon={faHeart} />
         )}{" "}
         {liked ? "Unlike" : "Like"}
-      </button>
+      </button>{" "}
+      ({post.likedBy.length})
       <CommentSection postId={post.id} />
     </div>
   );
