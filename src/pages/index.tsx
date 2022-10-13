@@ -15,7 +15,6 @@ const Home: NextPage = () => {
     hasNextPage,
     isFetching,
   } = trpc.useInfiniteQuery(["post.all", { limit: 5 }]);
-  console.log(data);
   return (
     <>
       <Head>
