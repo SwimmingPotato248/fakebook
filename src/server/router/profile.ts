@@ -4,16 +4,15 @@ import { createRouter } from "./context";
 
 export const profileRouter = createRouter()
   .query("me", {
-    input: z.object({
-      userId: z.string(),
-    }),
-    async resolve({ ctx, input }) {
+    async resolve({ ctx }) {
+      if (!ctx.session?.user || !ctx.session.user.id)
+        throw new TRPCError({ code: "UNAUTHORIZED" });
       try {
         return await ctx.prisma.profile.findUnique({
-          where: { userId: input.userId },
+          where: { userId: ctx.session?.user.id },
         });
       } catch {
-        throw new TRPCError({ code: "NOT_FOUND" });
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
     },
   })

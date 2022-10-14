@@ -10,7 +10,7 @@ export default function Navbar() {
       <div className="flex gap-2">
         {session ? (
           <>
-            <Link href="/profile">
+            <Link href="/profile/me">
               <button>{session.user?.name}</button>
             </Link>
             <button onClick={() => signOut({ callbackUrl: "/" })}>
