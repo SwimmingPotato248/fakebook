@@ -14,7 +14,11 @@ const Home: NextPage = () => {
     fetchNextPage,
     hasNextPage,
     isFetching,
-  } = trpc.useInfiniteQuery(["post.all", { limit: 5 }]);
+  } = trpc.useInfiniteQuery(["post.all", { limit: 5 }], {
+    getNextPageParam: lastPage => lastPage.nextCursor,
+    keepPreviousData: true,
+  });
+
   return (
     <>
       <Head>
@@ -45,7 +49,7 @@ const Home: NextPage = () => {
         className="mx-auto block rounded-lg bg-blue-600 px-4 disabled:cursor-not-allowed disabled:bg-gray-500"
         disabled={!hasNextPage || isFetching}
       >
-        {hasNextPage || isFetching ? "Read more..." : "No more posts"}
+        {hasNextPage ? "Read more..." : "No more posts"}
       </button>
     </>
   );

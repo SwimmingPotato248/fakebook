@@ -9,7 +9,7 @@ export const postRouter = createRouter()
       cursor: z.number().nullish(),
     }),
     async resolve({ ctx, input }) {
-      const limit = input.limit ? input.limit : 5;
+      const limit = input.limit || 5;
       const posts = await ctx.prisma.post.findMany({
         orderBy: {
           createdAt: "desc",
