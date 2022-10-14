@@ -29,7 +29,7 @@ export default function PostCard({ postId }: { postId: number }) {
   if (isLoading) return <Loading />;
   if (isError || !post) return <div>Error...</div>;
   return (
-    <div className="my-2 w-2/3 max-w-lg rounded-md bg-stone-300 p-2 ">
+    <div className="my-2 w-full rounded-md bg-stone-300 p-2 ">
       <h1 className="text-xl">{post.user.name}</h1>
       <p className="text-xs">{post.createdAt.toLocaleString()}</p>
       <p className="my-2">{post.content}</p>

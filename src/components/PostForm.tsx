@@ -18,7 +18,7 @@ export default function PostForm({ refetch }: { refetch: () => void }) {
   });
   return (
     <form
-      className="mx-auto flex w-2/3 max-w-md flex-col justify-center"
+      className="mx-auto flex flex-col justify-center"
       onSubmit={e => {
         e.preventDefault();
         setBtnDisable(true);

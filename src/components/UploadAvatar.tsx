@@ -51,13 +51,14 @@ export const UploadAvatar: React.FC<UploadAvatarProps> = ({
           hidden
         />
       </label>
-      <div className="relative flex items-center justify-center">
+      <div className="relative flex flex-1 flex-col items-center justify-center">
         <Image
           src={image !== "" ? image : "/avatar-placeholder.webp"}
           alt="Preview"
           height={100}
           width={100}
         />
+        Preview Avatar
       </div>
     </div>
   );
