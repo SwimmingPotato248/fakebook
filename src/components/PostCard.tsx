@@ -40,6 +40,11 @@ export default function PostCard({ postId }: { postId: number }) {
     );
   }, [post, session]);
 
+  const [likeCount, setLikeCount] = useState<number>(0);
+  useEffect(() => {
+    setLikeCount(post?.likedBy.length || 0);
+  }, [post]);
+
   if (isLoading) return <Loading />;
   if (isError || !post) return <div>Error...</div>;
 
@@ -56,6 +61,7 @@ export default function PostCard({ postId }: { postId: number }) {
             onClick={() => {
               setLiked(!liked);
               mutateLike({ postId: post.id, like: !liked });
+              setLikeCount(prev => prev + (liked ? -1 : 1));
             }}
           >
             {liked ? (
@@ -64,7 +70,7 @@ export default function PostCard({ postId }: { postId: number }) {
               <FontAwesomeIcon icon={faHeart} />
             )}
           </button>
-          {post.likedBy.length}
+          {likeCount}
         </div>
         <button
           onClick={() => {

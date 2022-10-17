@@ -44,6 +44,8 @@ export default function Profile() {
               Edit this profile
             </button>
           </Link>
+          <Link href={"/users/saved"}>Saved posts</Link>
+          <Link href={"/users/liked"}>Liked posts</Link>
         </>
       )}
     </div>

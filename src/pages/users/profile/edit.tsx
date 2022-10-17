@@ -1,7 +1,7 @@
 import Head from "next/head";
-import Loading from "../../components/Loading";
-import ProfileForm from "../../components/ProfileForm";
-import { trpc } from "../../utils/trpc";
+import Loading from "@/src/components/Loading";
+import ProfileForm from "@/src/components/ProfileForm";
+import { trpc } from "@/src/utils/trpc";
 
 const EditProfile = () => {
   const { data, isLoading, isError } = trpc.useQuery(["profile.me"]);
