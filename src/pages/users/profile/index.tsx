@@ -2,8 +2,8 @@ import { signIn } from "next-auth/react";
 import Image from "next/future/image";
 import Head from "next/head";
 import Link from "next/link";
-import Loading from "../../components/Loading";
-import { trpc } from "../../utils/trpc";
+import Loading from "@/src/components/Loading";
+import { trpc } from "@/src/utils/trpc";
 
 export default function Profile() {
   const { data, isLoading, isError } = trpc.useQuery(["profile.me"], {
@@ -34,9 +34,9 @@ export default function Profile() {
               alt="Avatar"
             />
             <div className="grow">
-              <div>{data?.fName + " " + data?.lName}</div>
-              <div>{data?.dateOfBirth.toLocaleDateString()}</div>
-              <div>{data?.bio}</div>
+              <div>Name: {data?.fName + " " + data?.lName}</div>
+              <div>Date of birth: {data?.dateOfBirth.toLocaleDateString()}</div>
+              <div>Bio: {data?.bio}</div>
             </div>
           </div>
           <Link href={"/profile/edit"}>

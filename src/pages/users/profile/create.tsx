@@ -1,5 +1,5 @@
 import Head from "next/head";
-import ProfileForm from "../../components/ProfileForm";
+import ProfileForm from "../../../components/ProfileForm";
 
 export default function CreateProfile() {
   return (

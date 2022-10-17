@@ -57,6 +57,8 @@ model User {
     likedPosts Post[]   @relation(name: "UserLikePost")
     profile    Profile?
     profileId  String?
+
+    savedPosts Post[] @relation("UserSavePost")
 }
 
 model VerificationToken {
@@ -94,6 +96,8 @@ model Post {
     comments  Comment[]
 
     likedBy User[] @relation(name: "UserLikePost")
+
+    savedBy User[] @relation("UserSavePost")
 }
 
 model Comment {

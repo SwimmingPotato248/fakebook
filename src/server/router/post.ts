@@ -37,7 +37,7 @@ export const postRouter = createRouter()
     async resolve({ ctx, input }) {
       return await ctx.prisma.post.findUnique({
         where: { id: input.postId },
-        include: { user: true, likedBy: true },
+        include: { user: true, likedBy: true, savedBy: true },
       });
     },
   })
@@ -75,6 +75,23 @@ export const postRouter = createRouter()
         data: {
           likedBy: input.like
             ? { connect: { id: ctx.session?.user?.id } }
+            : { disconnect: { id: ctx.session.user.id } },
+        },
+      });
+    },
+  })
+  .mutation("save", {
+    input: z.object({
+      postId: z.number(),
+      save: z.boolean(),
+    }),
+    async resolve({ input, ctx }) {
+      if (!ctx.session?.user?.id) throw new TRPCError({ code: "UNAUTHORIZED" });
+      await ctx.prisma.post.update({
+        where: { id: input.postId },
+        data: {
+          savedBy: input.save
+            ? { connect: { id: ctx.session.user.id } }
             : { disconnect: { id: ctx.session.user.id } },
         },
       });
